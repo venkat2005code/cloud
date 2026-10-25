@@ -7,6 +7,7 @@
     "home-cloud-native-sre":"home-2-cloud-native-sre.html",
     "home-1-enterprise-migration":"index.html",
     "home-2-cloud-native-sre":"home-2-cloud-native-sre.html",
+    "index":"index.html",
     "services":"services.html",
     "case-studies":"case-studies.html",
     "technologies":"technologies.html",
@@ -35,8 +36,8 @@
     localStorage.setItem("stratoops-dir",dir);
     const btn=document.getElementById("rtl-toggle-btn");
     if(btn){
-      const label=btn.querySelector("[data-rtl-label]") || btn.querySelector("span:last-child");
-      if(label) label.textContent=dir==="rtl" ? "LTR" : "RTL";
+      const icon=btn.querySelector(".material-symbols-outlined");
+      if(icon) icon.textContent="language";
       btn.setAttribute("aria-label",dir==="rtl" ? "Switch to left-to-right" : "Switch to right-to-left");
       btn.title=dir==="rtl" ? "Switch to LTR" : "Switch to RTL";
     }
@@ -49,6 +50,53 @@
   function navigate(path){
     const page=getPage(path);
     if(page) window.location.href=page;
+  }
+
+  function setMobileMenuOpen(open){
+    const menu=document.getElementById("strato-mobile-menu");
+    const toggle=document.getElementById("strato-mobile-toggle");
+    if(!menu || !toggle) return;
+    menu.classList.toggle("open",open);
+    toggle.setAttribute("aria-expanded",String(open));
+    toggle.setAttribute("aria-label",open?"Close navigation":"Open navigation");
+    toggle.querySelector(".material-symbols-outlined").textContent=open?"close":"menu";
+  }
+
+  function createHomeDropdown(summaryClass){
+    const dropdown=document.createElement("details");
+    dropdown.className="strato-home-dropdown";
+
+    const summary=document.createElement("summary");
+    summary.className=summaryClass;
+    summary.textContent="Home";
+    const icon=document.createElement("span");
+    icon.className="material-symbols-outlined strato-home-chevron";
+    icon.textContent="keyboard_arrow_down";
+    summary.appendChild(icon);
+    dropdown.appendChild(summary);
+
+    const submenu=document.createElement("div");
+    submenu.className="strato-home-submenu";
+    [
+      ["Home 1: Enterprise Migration","index"],
+      ["Home 2: Cloud Native & SRE","home-2-cloud-native-sre"]
+    ].forEach(([label,path])=>{
+      const link=document.createElement("a");
+      link.href=PAGES[path];
+      link.dataset.path=path;
+      link.textContent=label;
+      submenu.appendChild(link);
+    });
+    dropdown.appendChild(submenu);
+    return dropdown;
+  }
+
+  function makeHomeDropdown(){
+    const nav=document.querySelector('nav[data-active-classes]');
+    const homeLink=nav && nav.querySelector('a[data-path="index"]');
+    if(!homeLink) return;
+    const dropdown=createHomeDropdown(homeLink.className);
+    homeLink.replaceWith(dropdown);
   }
 
   function makeMobileMenu(){
@@ -69,9 +117,7 @@
       controls.insertBefore(b,controls.firstChild);
       b.addEventListener("click",function(){
         const menu=document.getElementById("strato-mobile-menu");
-        const open=menu.classList.toggle("open");
-        b.setAttribute("aria-expanded",String(open));
-        b.querySelector(".material-symbols-outlined").textContent=open?"close":"menu";
+        setMobileMenuOpen(!menu.classList.contains("open"));
       });
     }
 
@@ -80,14 +126,13 @@
     menu.id="strato-mobile-menu";
     menu.className="strato-mobile-menu";
     const items=[
-      ["Home 1: Enterprise Migration","home-enterprise-migration"],
-      ["Home 2: Cloud Native & SRE","home-cloud-native-sre"],
       ["Services","services"],
       ["Case Studies","case-studies"],
       ["Technologies","technologies"],
       ["About / Leadership","about-leadership"],
       ["Contact","contact"]
     ];
+    menu.appendChild(createHomeDropdown(""));
     items.forEach(([label,path])=>{
       const a=document.createElement("a");
       a.href=PAGES[path];
@@ -272,27 +317,43 @@
       rtlBtn.addEventListener("click",()=>applyDirection(document.documentElement.getAttribute("dir")==="rtl"?"ltr":"rtl"));
     }
 
+    makeHomeDropdown();
     makeMobileMenu();
-  standardizeFooters();
+    standardizeFooters();
     wireLinks();
     wireForms();
 
     // Update active navigation.
+    const nav = document.querySelector('nav[data-active-classes]');
+    const activeClasses = nav ? nav.getAttribute('data-active-classes').split(' ') : ['text-primary', 'font-semibold'];
+
     document.querySelectorAll("a[data-path]").forEach(a=>{
       if(a.dataset.path && PAGES[a.dataset.path]===currentFile){
         a.setAttribute("aria-current","page");
+        if(a.parentElement === nav) {
+          a.classList.remove('opacity-80', 'text-on-surface');
+          a.classList.add(...activeClasses);
+        }
+        const homeDropdown=a.closest(".strato-home-dropdown");
+        if(homeDropdown){
+          const summary=homeDropdown.querySelector("summary");
+          summary.classList.remove("opacity-80","text-on-surface");
+          summary.classList.add(...activeClasses);
+        }
       }
     });
 
     // Close mobile menu after navigation click.
     document.querySelectorAll("#strato-mobile-menu a[data-path]").forEach(a=>{
-      a.addEventListener("click",()=>document.getElementById("strato-mobile-menu")?.classList.remove("open"));
+      a.addEventListener("click",()=>setMobileMenuOpen(false));
     });
     document.querySelector('#strato-mobile-menu a[data-action="theme"]')?.addEventListener("click",e=>{
       e.preventDefault(); applyTheme(document.documentElement.classList.contains("light")?"dark":"light");
+      setMobileMenuOpen(false);
     });
     document.querySelector('#strato-mobile-menu a[data-action="rtl"]')?.addEventListener("click",e=>{
       e.preventDefault(); applyDirection(document.documentElement.getAttribute("dir")==="rtl"?"ltr":"rtl");
+      setMobileMenuOpen(false);
     });
   }
 
