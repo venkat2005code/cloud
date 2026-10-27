@@ -7,6 +7,8 @@
     "home-cloud-native-sre":"home-2-cloud-native-sre.html",
     "home-1-enterprise-migration":"index.html",
     "home-2-cloud-native-sre":"home-2-cloud-native-sre.html",
+    "home-2":"home-2-cloud-native-sre.html",
+    "home-2.html":"home-2-cloud-native-sre.html",
     "index":"index.html",
     "services":"services.html",
     "case-studies":"case-studies.html",
@@ -37,7 +39,7 @@
     const btn=document.getElementById("rtl-toggle-btn");
     if(btn){
       const icon=btn.querySelector(".material-symbols-outlined");
-      if(icon) icon.textContent="language";
+      if(icon) icon.textContent=dir==="rtl" ? "format_textdirection_l_to_r" : "format_textdirection_r_to_l";
       btn.setAttribute("aria-label",dir==="rtl" ? "Switch to left-to-right" : "Switch to right-to-left");
       btn.title=dir==="rtl" ? "Switch to LTR" : "Switch to RTL";
     }

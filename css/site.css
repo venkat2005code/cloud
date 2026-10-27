@@ -8,6 +8,7 @@
   --surface-container-high:#262a33;
   --surface-container-highest:#31353e;
   --surface-variant:#31353e;
+  --surface-dim:#141820;
   --surface-bright:#353942;
   --on-surface:#dfe2ee;
   --on-surface-variant:#b9cacb;
@@ -47,6 +48,7 @@ html.light{
   --surface-container-high:#dfe8eb;
   --surface-container-highest:#d4e0e3;
   --surface-variant:#dbe5e7;
+  --surface-dim:#d9e3e6;
   --surface-bright:#ffffff;
   --on-surface:#102027;
   --on-surface-variant:#4d6268;
@@ -89,6 +91,7 @@ html.light body{background:var(--surface)!important;color:var(--on-surface)!impo
 [class~="bg-surface-container-high"]{background-color:var(--surface-container-high)!important}
 [class~="bg-surface-container-highest"]{background-color:var(--surface-container-highest)!important}
 [class~="bg-surface-variant"]{background-color:var(--surface-variant)!important}
+[class~="bg-surface-dim"]{background-color:var(--surface-dim)!important}
 [class~="bg-surface-bright"]{background-color:var(--surface-bright)!important}
 [class~="bg-primary"]{background-color:var(--primary)!important}
 [class~="bg-primary-container"]{background-color:var(--primary-container)!important}
@@ -98,6 +101,29 @@ html.light body{background:var(--surface)!important;color:var(--on-surface)!impo
 [class~="bg-tertiary-container"]{background-color:var(--tertiary-container)!important}
 [class~="bg-error"]{background-color:var(--error)!important}
 [class~="bg-error-container"]{background-color:var(--error-container)!important}
+
+/* Support background opacity variations with proper theme colors */
+[class*="bg-surface-container-lowest/"]{background-color:color-mix(in srgb, var(--surface-container-lowest) 92%, transparent)!important}
+[class*="bg-surface-container-low/"]{background-color:color-mix(in srgb, var(--surface-container-low) 92%, transparent)!important}
+[class*="bg-surface-container/"]{background-color:color-mix(in srgb, var(--surface-container) 92%, transparent)!important}
+[class*="bg-surface-container-high/"]{background-color:color-mix(in srgb, var(--surface-container-high) 92%, transparent)!important}
+[class*="bg-surface-container-highest/"]{background-color:color-mix(in srgb, var(--surface-container-highest) 92%, transparent)!important}
+[class*="bg-surface-dim/"]{background-color:color-mix(in srgb, var(--surface-dim) 92%, transparent)!important}
+[class*="bg-surface-bright/"]{background-color:color-mix(in srgb, var(--surface-bright) 92%, transparent)!important}
+[class*="bg-surface/"]{background-color:color-mix(in srgb, var(--surface) 92%, transparent)!important}
+
+/* Gradient scrims over images and heroes */
+[class*="from-surface-container-lowest"]{
+  --tw-gradient-from:var(--surface-container-lowest) var(--tw-gradient-from-position, )!important;
+  --tw-gradient-to:color-mix(in srgb, var(--surface-container-lowest) 0%, transparent) var(--tw-gradient-to-position, )!important;
+  --tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)!important;
+}
+[class*="via-surface-container-lowest/"]{
+  --tw-gradient-stops:var(--tw-gradient-from), color-mix(in srgb, var(--surface-container-lowest) 35%, transparent), var(--tw-gradient-to)!important;
+}
+[class*="to-surface-container-lowest"]{
+  --tw-gradient-to:var(--surface-container-lowest) var(--tw-gradient-to-position, )!important;
+}
 
 [class~="text-on-surface"]{color:var(--on-surface)!important}
 [class~="text-on-surface-variant"]{color:var(--on-surface-variant)!important}
@@ -119,6 +145,21 @@ html.light body{background:var(--surface)!important;color:var(--on-surface)!impo
 [class~="text-secondary-fixed"]{color:var(--secondary-fixed)!important}
 [class~="text-secondary-fixed-dim"]{color:var(--secondary-fixed-dim)!important}
 [class~="text-tertiary-fixed-dim"]{color:var(--tertiary-fixed-dim)!important}
+
+/* Text and fill colors for surface tokens (used in SVG diagrams) */
+[class~="text-surface"]{color:var(--surface)!important}
+[class~="text-surface-container-lowest"]{color:var(--surface-container-lowest)!important}
+[class~="text-surface-container-low"]{color:var(--surface-container-low)!important}
+[class~="text-surface-container"]{color:var(--surface-container)!important}
+[class~="text-surface-container-high"]{color:var(--surface-container-high)!important}
+[class~="text-surface-container-highest"]{color:var(--surface-container-highest)!important}
+[class~="text-surface-variant"]{color:var(--surface-variant)!important}
+
+/* SVG blueprint diagram styling with crisp high-contrast outlines */
+svg rect[class*="text-surface-container"]{
+  stroke:var(--outline-variant);
+  stroke-width:1px;
+}
 
 [class~="border-outline"]{border-color:var(--outline)!important}
 [class~="border-outline-variant"]{border-color:var(--outline-variant)!important}
